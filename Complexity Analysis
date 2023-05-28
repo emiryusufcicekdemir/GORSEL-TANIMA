@@ -1,0 +1,72 @@
+# OpenCV ile Görsel Parça Eşleştirme Projesi: Karmaşıklık Analizi
+
+## Giriş
+
+Karmaşıklık analizi, bir algoritmanın veya programın çalışma süresi ve bellek kullanımı gibi performans ölçütlerini değerlendirmek için kullanılan bir yöntemdir. Karmaşıklık analizi, bir algoritmanın veya programın verimliliğini ve ölçeklenebilirliğini belirlemek için önemlidir.
+
+Projemizde, verilen bir liste içindeki görsellerin en çok benzeyen parçalarını bulmak ve bu parçaların benzerlik skorlarını yazdırmak için Image Template Matching yöntemini kullandık. Bu yöntemde, aranan görsel (template) kaynak görsel üzerinde kaydırılarak (sliding) her konumda bir benzerlik skoru hesaplanır. Benzerlik skoru en yüksek olan konum, template'in kaynak görselde bulunduğu konum olarak kabul edilir.
+
+Bu raporda, projemizin zaman karmaşıklığı (time complexity) ve alan karmaşıklığı (space complexity) gibi karmaşıklık ölçütlerini hesaplayacağız. Ayrıca, projemizin avantajları ve dezavantajları hakkında yorum yapacağız.
+
+## Zaman Karmaşıklığı
+
+Zaman karmaşıklığı, bir algoritmanın veya programın çalışması için gereken zamanı ifade eder. Zaman karmaşıklığı, genellikle girdi boyutuna (input size) bağlı olarak büyük O notasyonu (big O notation) ile gösterilir. Büyük O notasyonu, bir fonksiyonun büyüme hızını en kötü durumda (worst case) sınırlayan bir fonksiyonu temsil eder.
+
+Projemizin zaman karmaşıklığını hesaplamak için, kodumuzun içindeki döngülerin (loops) kaç kez çalıştığını belirlememiz gerekir. Kodumuzda dört adet iç içe döngü vardır. Bu döngülerin her birinin çalışma sayısını aşağıdaki tabloda görebilirsiniz:
+
+| Döngü | Çalışma Sayısı |
+| ----- | -------------- |
+| 1     | n              |
+| 2     | n-1            |
+| 3     | m              |
+| 4     | m              |
+
+Burada n, image_links listesinin uzunluğunu, m ise patches sözlüğündeki her listenin uzunluğunu temsil eder. Bu değerleri kullanarak, kodumuzun toplam çalışma sayısını şöyle hesaplayabiliriz:
+
+```
+T(n,m) = n * (n-1) * m * m
+```
+
+Bu formülü büyük O notasyonu ile ifade etmek için, en büyük katsayıyı ve sabit terimleri atabiliriz. Böylece zaman karmaşıklığımız şöyle olur:
+
+```
+O(n,m) = n^2 * m^2
+```
+
+Bu sonuç bize, projemizin zaman karmaşıklığının hem image_links listesinin uzunluğuna hem de patches sözlüğündeki her listenin uzunluğuna karesel olarak bağlı olduğunu göstermektedir. Bu da projemizin zaman açısından verimli olmadığını anlamına gelmektedir. Özellikle, image_links listesindeki veya patches sözlüğündeki her listenin uzunluğu arttıkça, kodumuzun çalışma süresi çok hızlı bir şekilde artacaktır.
+
+## Alan Karmaşıklığı
+
+Alan karmaşıklığı, bir algoritmanın veya programın çalışması için gereken bellek miktarını ifade eder. Alan karmaşıklığı da zaman karmaşıklığı gibi girdi boyutuna bağlı olarak büyük O notasyonu ile gösterilir.
+
+Projemizin alan karmaşıklığını hesaplamak için, kodumuzun içindeki değişkenlerin (variables) kaç bayt (byte) bellek kullandığını belirlememiz gerekir. Kodumuzda beş adet değişken vardır. Bu değişkenlerin her birinin bellek kullanımını aşağıdaki tabloda görebilirsiniz:
+
+| Değişken    | Bellek Kullanımı |
+| ----------- | ---------------- |
+| image_links | 8n               |
+| images      | 8nm              |
+| patches     | 8nm              |
+| similarities| 40n^2m^2         |
+| best_match  | 40               |
+
+Burada n, image_links listesinin uzunluğunu, m ise patches sözlüğündeki her listenin uzunluğunu temsil eder. Ayrıca her link için 8 bayt, her görüntü veya parça için 8m bayt ve her benzerlik skoru veya eşleşme için 40 bayt bellek kullandığımızı varsaydık. Bu değerleri kullanarak, kodumuzun toplam bellek kullanımını şöyle hesaplayabiliriz:
+
+```
+S(n,m) = 8n + 8nm + 8nm + 40n^2m^2 + 40
+```
+
+Bu formülü büyük O notasyonu ile ifade etmek için yine en büyük katsayıyı ve sabit terimleri atabiliriz. Böylece alan karmaşıklığımız şöyle olur:
+
+```
+O(n,m) = n^2 * m^2
+```
+
+Bu sonuç bize, projemizin alan karmaşıklığının da hem image_links listesinin uzunluğuna hem de patches sözlüğündeki her listenin uzunluğuna karesel olarak bağlı olduğunu göstermektedir. Bu da projemizin alan açısından da verimli olmadığını anlamına gelmektedir. Özellikle, image_links listesindeki veya patches sözlüğündeki her listenin uzunluğu arttıkça, kodumuzun bellek kullanımı çok hızlı bir şekilde artacaktır.
+
+## Yorum
+
+Projemizin karmaşıklık analizi sonucunda elde ettiğimiz değerler bize şu yorumları yapmamızı sağlamaktadır:
+
+- Projemiz zaman ve alan açısından verimli değildir. Zaman ve alan karmaşıklıkları çok yüksektir.
+- Projemiz ölçeklenebilir değildir. Girdi boyutları arttıkça performansı çok düşecektir.
+- Projemiz optimize edilmeye ihtiyaç duymaktadır. Zaman ve alan karmaşıklıklarını azaltacak yöntemler araştırılmalıdır.
