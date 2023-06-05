@@ -1,3 +1,79 @@
+(ENG)
+# Visual Part Matching Project with OpenCV: Complexity Analysis
+
+## Entrance
+
+Complexity analysis is a method used to evaluate performance metrics such as running time and memory usage of an algorithm or program. Complexity analysis is important for determining the efficiency and scalability of an algorithm or program.
+
+In our project, we used the Image Template Matching method to find the most similar parts of the images in a given list and print the similarity scores of these parts. In this method, a similarity score is calculated at each position by sliding the searched image (template) on the source image. The location with the highest similarity score is considered the location where the template is located in the source image.
+
+In this report, we will calculate complexity metrics such as time complexity and space complexity of our project. We will also comment on the advantages and disadvantages of our project.
+
+## Time Complexity
+
+Time complexity refers to the time required for an algorithm or program to run. Time complexity is usually denoted by big O notation, depending on the input size. The big O notation represents a function that limits the growth rate of a function in the worst case.
+
+To calculate the time complexity of our project, we need to determine how many times the loops in our code are run. There are four nested loops in our code. You can see the number of runs for each of these cycles in the table below:
+
+| Loop | Number of Studies |
+| ----- | -------------- |
+| 1 | n |
+| 2 | n-1 |
+| 3 | m |
+| 4 | m |
+
+where n represents the length of the image_links list, and m represents the length of each list in the patches dictionary. Using these values, we can calculate the total number of runs of our code like this:
+
+```
+T(n,m) = n * (n-1) * m * m
+```
+
+To express this formula in big O notation, we can discard the largest coefficient and constant terms. So our time complexity would be:
+
+```
+O(n,m) = n^2 * m^2
+```
+
+This result shows us that the time complexity of our project depends squarely on both the length of the image_links list and the length of each list in the patches dictionary. This means that our project is not time efficient. In particular, as the length of each list in the image_links list or the patches dictionary increases, the execution time of our code will increase very quickly.
+
+## Field Complexity
+
+Space complexity refers to the amount of memory required for an algorithm or program to run. Area complexity, like time complexity, is denoted by the big O notation depending on the input size.
+
+To calculate the space complexity of our project, we need to determine how many bytes (bytes) of memory the variables (variables) in our code use. There are five variables in our code. You can see the memory usage of each of these variables in the table below:
+
+| Variable | Memory Usage |
+| ----------- | ---------------- |
+| image_links | 8n |
+| images | 8nm |
+| patches | 8nm |
+| similarities| 40n^2m^2 |
+| best_match | 40 |
+
+where n represents the length of the image_links list, and m represents the length of each list in the patches dictionary. We also assumed that we use 8 bytes of memory for each link, 8m bytes for each image or fragment, and 40 bytes of memory for each similarity score or match. Using these values, we can calculate the total memory usage of our code like this:
+
+```
+S(n,m) = 8n + 8nm + 8nm + 40n^2m^2 + 40
+```
+
+To express this formula in big O notation, we can again discard the largest coefficient and constant terms. So our field complexity would be:
+
+```
+O(n,m) = n^2 * m^2
+```
+
+This result shows us that the area complexity of our project also depends squarely on both the length of the image_links list and the length of each list in the patches dictionary. This means that our project is not efficient in terms of space. In particular, as the length of each list in the image_links list or the patches dictionary increases, the memory usage of our code will increase very quickly.
+
+## Comment
+
+The values we obtained as a result of the complexity analysis of our project allow us to make the following comments:
+
+- Our project is not efficient in terms of time and space. Time and space complexities are very high.
+- Our project is not scalable. As the input sizes increase, its performance will decrease a lot.
+- Our project needs to be optimized. Methods to reduce time and space complexity should be sought.
+
+
+(TR)
 # OpenCV ile Görsel Parça Eşleştirme Projesi: Karmaşıklık Analizi
 
 ## Giriş
