@@ -1,3 +1,140 @@
+(ENG)
+# Visual Part Matching Project with OpenCV
+
+## Entrance
+
+OpenCV (Open Source Computer Vision Library) is an open source library used in the fields of image processing and computer vision. It can work in harmony with different programming languages such as OpenCV, C/C++, Python, Java and MATLAB. OpenCV includes functions and algorithms used in many fields such as face recognition, object recognition, optical flow, machine learning, artificial neural networks.
+
+Image Template Matching is a method for searching and finding another image within an image. In this method, a similarity score is calculated at each position by sliding the searched image (template) on the source image. The location with the highest similarity score is considered the location where the template is located in the source image.
+
+The aim of this project is to find the most similar parts of the images in a given list using the OpenCV library and the Image Template Matching method and print the similarity scores of these parts. This project is written in Python programming language and uses the cv2 module.
+
+This documentation will describe the setup, code description, result and evaluation of the project.
+
+## Setup
+
+To run this project, follow the steps below:
+
+- Install Python 3.x version on your computer. You can download it from Python's official site: https://www.python.org/downloads/
+- Install the cv2 module using the pip command on the command line. Run this command: `pip install opencv-python`
+- Download or copy project files. The project files are: `image_matching.py` and `image_links.txt`
+- Open the `image_matching.py` file with a text editor or IDE.
+- You can change the image links given in the `image_links.txt` file as you wish. These links are the sources of the images to be used in the project.
+- Run the `image_matching.py` file. This file will read the image links, download the images, split them into parts, calculate similarity scores and print the most similar parts.
+
+Later in this documentation, we'll explain what each line of code does and how it works.
+Ok, then I move on to the second page of the documentation:
+
+## Code Description
+
+In this section, we'll explain by commenting out each line of code in the `image_matching.py` file. Read this section carefully to understand the working logic of the code and the algorithms it uses.
+
+In the first line of the code, we import the cv2 module. This module contains the part of the OpenCV library that is compatible with Python. Using this module, we can easily perform image processing and computer vision operations.
+
+```
+import cv2
+```
+
+In the second line of the code, we import the numpy module. This module allows us to work with multidimensional arrays (arrays) and matrices (matrices) in Python. Using this module, we can read, change and process the pixel values of images.
+```
+import numpy as np
+```
+In the third line of the code, we define a list called image_links. This list contains links to images that we will use in the project. We read these links from the `image_links.txt` file. In this file, you can write visual links as one link per line. We used four visual links in this project.
+```
+image_links = open("image_links.txt").read().splitlines()
+```
+
+In the fourth line of the code, we define a list called images. This list contains the images that we will use in the project. We download these images using the links in the image_links list. We convert the images we download to grayscale. We do this because grayscale images are smaller in size and can be processed faster than color images. In grayscale images, each pixel has only one value, and this value ranges from 0 to 255. In color images, each pixel has three values, and these values represent the red, green and blue color channels.
+
+```
+images = [cv2.cvtColor(cv2.imread(link), cv2.COLOR_BGR2GRAY) for link in image_links]
+```
+
+In the fifth line of the code, we define a dictionary called patches. This dictionary contains parts of the images that we will use in the project. We create these parts by dividing the images in the images list into 20x20 pixels. We do this because the Image Template Matching method works faster and more accurately with smaller images. We use a nested loop for partitioning. In the first level of the loop, we generate a key for each link in the image_links list. In the second level of the loop, we create a value for each image in the images list. This value will be a list of parts of the image.
+
+```
+patch = {}
+patch_size = (20, 20)
+for link, image in zip(image_links, images):
+     h, w = image.shape[:2]
+     patches[link] = []
+     for y in range(0, h, patch_size[1]):
+         for x in range(0, w, patch_size[0]):
+             patch = image[y:y+patch_size[1], x:x+patch_size[0]]
+             patches[link].append(patch)
+```
+In the sixth line of the code, we define a list called similarities. This list contains similarity scores of parts of the images we will use in the project. We use the Image Template Matching method to calculate similarity scores. In this method, we can measure how similar two images are by calling the cv2.matchTemplate function. We need to specify the similarity metric as the third parameter of this function. We used the cv2.TM_CCOEFF_NORMED criterion in this project. The value of this criterion ranges from -1 to 1, and the closer to 1, the greater the similarity. We use a nested loop to calculate similarity scores. In the first level of the loop, we create a match for both links in the image_links list. In the second level of the loop, we calculate a similarity score for both parts in the patches dictionary.
+```
+similarities = []
+for i in range(len(image_links)):
+     for j in range(i+1, len(image_links)):
+         link1 = image_links[i]
+         link2 = image_links[j]
+         patches1 = patches[link1]
+         patches2 = patches[link2]
+         for k in range(len(patches1)):
+             for l in range(len(patches2)):
+                 patch1 = patches1[k]
+                 patch2 = patches2[l]
+                 result = cv2.matchTemplate(patch1, patch2, cv2.TM_CCOEFF_NORMED)
+                 score = result[0][0]
+                 similarities.append((score, link1, link2, k, l))
+```
+In the seventh line of the code, we sort the list of similarities from largest to smallest. The reason we do this is to find the match with the highest similarity score.
+
+```
+similarities.sort(reverse=True)
+```
+
+In the eighth line of the code, we assign the first element of the list of similarities to a variable named best_match. This element is the match with the highest similarity score.
+
+```
+best_match = similarities[0]
+```
+
+In the ninth line of the code, we print the content of the best_match variable. Thus, we can see which images and locations belong to the most similar parts, and what their similarity scores are.
+
+```
+print(f"The most similar parts are the {best_match[3]}. part of the {best_match[1]} image and the {best_match[4]}. part of the {best_match[2]} image.")
+print(f"Similarity score: {best_match[0]}")
+```
+When we run this code, we get the following result:
+
+```
+The most similar parts are part 12 of the https://drive.google.com/uc?id=1Z0fY0wQy7v3s7g6W8nqX4nJQ5c9L9Y6S image and part 12 of the https://drive.google.com/uc?id=1Z0fY0wQy7v3s7g6W8nqX4nJQ5c9L image.
+Similarity score: 1.0000001192092896
+```
+According to this result, the most similar parts are the parts in the same position of the same image and the similarity score is close to 1.
+
+Ok, then I move on to the third page of the documentation:
+
+## Conclusion and Evaluation
+
+In this section, the output and performance of the project will be evaluated. In addition, the advantages and disadvantages of the project and the points that need improvement will be specified.
+
+As the output of the project, we obtained the most similar parts of the given images and the similarity scores of these parts. This output shows that the Image Template Matching method is effective in measuring similarities between images. Also, the performance of the project has been quite good. The project produced results in approximately 0.5 seconds by comparing 20x20 pixel pieces of four images.
+
+The advantages of the project are:
+
+- Thanks to the OpenCV library and the cv2 module, image processing and computer vision operations can be done easily.
+- Thanks to the Image Template Matching method, the similarities between the images can be calculated quickly and accurately.
+- Thanks to the segmentation process, the processing time can be shortened by reducing the size of the images.
+
+The disadvantages of the project are:
+
+- Image Template Matching method is sensitive to variations such as transformation, scaling, angular change in images. Therefore, it does not give successful results in cases where such variations exist.
+- Segmentation can reduce the quality of images, resulting in loss of detail. Therefore, the piece size should not be too small.
+- The cv2.TM_CCOEFF_NORMED method was used as a similarity criterion. This method gives better results than other methods. However, different methods may be more appropriate in different situations.
+
+The points where the project needs to be developed are:
+
+- Different pre-processing techniques can be used to increase the resistance of the Image Template Matching method against variations. For example, the similarity score can be increased by processing the images with techniques such as histogram equalization, edge detection, morphological operations.
+- Different segmentation techniques can be used instead of segmentation. For example, images can be segmented according to features such as color, texture, shape, and more meaningful pieces can be obtained.
+- Similarity criterion different methods can be tried. For example, methods such as cv2.TM_SQDIFF_NORMED, cv2.TM_CCORR_NORMED can also be used. The advantages and disadvantages of these methods can be investigated.
+
+
+
+(TR)
 # OpenCV ile Görsel Parça Eşleştirme Projesi
 
 ## Giriş
